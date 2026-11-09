@@ -12,6 +12,20 @@ Code deliverables for Hardik Tiwari (230437), IIT Kanpur. Each phase directory c
 | 6 | Abstractive summarization | Phase 1 checkpoints and tokenizer | [Summarization](code/phase6/) |
 | 7 | Prior case retrieval | Phase 1 checkpoints and tokenizer | [Retrieval](code/phase7/) |
 
+## Featured models
+
+Use **`cs781-legal-intelligence`** as the GitHub repository name. The table points to the exact candidate IDs in each phase's runnable notebook. Phases 1–4 start with the reported competition winner and use local evaluation to select the two remaining models because full per-candidate Codabench scores were unavailable. Phases 5 and 7 use visible Codabench scores for individual models. The original suites also preserve the comparison runs and any teacher dependencies.
+
+| Phase | Models featured in the package |
+| --- | --- |
+| 1 | Balanced decoder, balanced hybrid, balanced local GQA |
+| 2 | 08 bidirectional span boost, 01 full decoder, 03 local GQA LoRA |
+| 3 | 02 full encoder–decoder, 01 full decoder, 07 distilled decoder |
+| 4 | 04 decoder adapters, 01 full decoder, 03 local GQA LoRMA+ |
+| 5 | Extra full-document decoder, 02 partial encoder–decoder, 01 full decoder |
+| 6 | Ranking pending. Full encoder–decoder, decoder LoRMA+, and distilled decoder are included as unranked candidates. |
+| 7 | 07 distilled decoder, 06 decoder cross-encoder, 03 local GQA LoRMA+ |
+
 ## Run a phase
 
 1. Import the notebook listed in the phase guide into Kaggle and select **GPU T4 ×2**. Keep each phase in a separate working directory.

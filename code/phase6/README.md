@@ -10,3 +10,13 @@ Attach the Phase 1 foundations and tokenizer, plus the official `Phase_6_Summ` d
 Fast candidate 06 trains or reuses 04 as its teacher. The default 20-minute cap is checked between training updates. Data preparation, validation, and test generation have separate runtimes. Use separate output directories for the two variants because candidate IDs overlap and the implementations differ.
 
 The reference chat records synthetic CPU smoke checks. A completed GPU run, local evaluation, official score, and submission count have yet to be verified. When artifacts arrive, record the notebook variant, candidate IDs, and scores before identifying the best model.
+
+## Three unranked candidates
+
+The code includes all candidates from both Phase 6 notebooks. The following full-suite candidates cover full tuning, multiplicative adaptation, and distillation. Rank them against the other completed candidates once comparable development or Codabench scores are available. These IDs refer to `summarization_suite.ipynb`. Candidate 06 in the fast notebook uses a different distillation setup.
+
+| Candidate ID | Method |
+| --- | --- |
+| `01_encoder_decoder_full` | Full encoder–decoder tuning |
+| `02_decoder_lorma` | Decoder LoRMA+ |
+| `06_decoder_student_kd` | Smaller decoder with sequence-level knowledge distillation |

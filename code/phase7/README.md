@@ -14,3 +14,13 @@ Open `prior_case_retrieval.ipynb` with the original Phase 1 tokenizer and all fo
 | RRF | Development-selected optional ensemble of 03, 05 and 01 |
 
 Candidate 07 led the visible Codabench submissions. The local development ensemble and the locally selected individual model (03) are separate records. `src/` and `configs/` capture the completed run. The configurations retain the original Kaggle paths as provenance. Generate fresh configurations through the notebook for new runs. For a saved dev run, use `src/evaluate_phase7_official.py --truth dev_truth.json --candidate-ids dev_candidate_ids.json --prediction dev_prediction.json`.
+
+## Three featured models
+
+These are the three highest visible individual-model Codabench scores. Candidates 03 and 04 both show 0.2510 at the displayed precision, so local development Micro-F1@7 breaks the tie (0.2879 for 03 and 0.2646 for 04). The separately scored RRF ensemble remains available in the notebook. Candidates 06 and 07 use earlier retrieval stages.
+
+| Rank | Candidate ID | Codabench Micro-F1@7 |
+| --- | --- | --- |
+| 1 | `07_decoder_student_kd` | 0.2593 |
+| 2 | `06_decoder_cross_encoder` | 0.2522 |
+| 3 | `03_local_gqa_lorma` | 0.2510 |

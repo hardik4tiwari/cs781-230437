@@ -282,6 +282,28 @@ Hybrid & 50,348,032 & 200,015,872 & 4.6401 & 1.620 \\
 
 \pending{Add verified Phase 6 results and your own interpretation of the local and Codabench results. The evidence folder contains additional variant metrics and the Phase 5 per-label table.}
 
+
+\subsection{Models featured in the code package}
+
+Phases 1--4 start with the reported Codabench winner. Two other models are selected by local evaluation because complete per-candidate competition scores are unavailable. Phases 5 and 7 use visible Codabench scores for individual models. The Phase 7 tie at displayed precision is resolved by development Micro-F1@7. Phase 6 code is available for all candidates and the ranking awaits comparable results.
+
+\begin{table}[H]
+\centering\small
+\caption{Three individual models featured per phase. Phase 6 candidates are unranked.}
+\begin{tabularx}{\linewidth}{@{}cYYY@{}}
+\toprule Phase & First selection & Second selection & Third selection \\ \midrule
+1 & Balanced decoder & Balanced hybrid & Balanced local GQA \\
+2 & 08 Bidirectional span boost & 01 Full decoder & 03 Local GQA LoRA \\
+3 & 02 Full encoder--decoder & 01 Full decoder & 07 Distilled decoder \\
+4 & 04 Decoder adapters & 01 Full decoder & 03 Local GQA LoRMA+ \\
+5 & Extra full-document decoder & 02 Partial encoder--decoder & 01 Full decoder \\
+6 & 01 Full encoder--decoder & 02 Decoder LoRMA+ & 06 Distilled decoder \\
+7 & 07 Distilled decoder & 06 Decoder cross-encoder & 03 Local GQA LoRMA+ \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\clearpage
 \section{Error Analysis and Discussion}
 \subsection{Phase-wise failure modes}
 \pending{Use actual examples and counts. Record the relevant output, gold reference and suspected mechanism. The Phase 4 supplied-label evaluation and Phase 5 per-label evidence are available.}

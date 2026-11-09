@@ -11,3 +11,13 @@ Open `foundation.ipynb` with the official Phase 1 corpus and test prompts. The n
 | `hybrid_balanced` | LSTM–Transformer hybrid | Balanced sampling |
 
 The prior report records the balanced decoder as the top visible Phase 1 submission. The notebook's local five-candidate manifest is a separate record of generated archives. Keep the original `capstone_phase1/tokenizer.json` and all four `runs/main_<architecture>/best_model.pt` files for the downstream phases. See [research references](research_references.md) for the foundation design provenance.
+
+## Three featured models
+
+Use the listed generation candidates in `foundation.ipynb`. The balanced decoder is the top submission reported in the prior project report. The other two have the lowest local common-suffix perplexities among the remaining foundations.
+
+| Slot | Candidate ID | Selection evidence |
+| --- | --- | --- |
+| 1 | `decoder_balanced` | Codabench BERTScore F1 0.8302, prior report |
+| 2 | `hybrid_balanced` | Local common-suffix perplexity 4.6401 |
+| 3 | `local_gqa_balanced` | Local common-suffix perplexity 4.9667 |
