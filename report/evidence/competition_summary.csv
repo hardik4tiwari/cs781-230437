@@ -4,5 +4,5 @@ phase,metric,best_visible_score,finished_rows_visible,source,rank
 3,Macro-F1,0.4542,7,prior project report draft,
 4,Macro-F1,0.6980,7,prior project report draft,
 5,Macro-F1,0.3982,7,Codabench My Submissions screenshot,
-6,BERTScore F1,,,completed run artifacts pending,
+6,BERTScore F1,,0,student confirmed no submission,
 7,Micro-F1@7,0.2593,8,Codabench My Submissions screenshot,
