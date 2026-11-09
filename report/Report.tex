@@ -1,0 +1,356 @@
+\documentclass[11pt,oneside]{article}
+\usepackage[letterpaper,margin=1in]{geometry}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern,microtype}
+\usepackage{booktabs,tabularx,array,float}
+\usepackage[numbers]{natbib}
+\usepackage{pgfplots}
+\usepackage{hyperref}
+\pgfplotsset{compat=1.18}
+\definecolor{inkblue}{HTML}{153B58}
+\definecolor{tealplot}{HTML}{087F78}
+\definecolor{draftamber}{HTML}{855012}
+\hypersetup{colorlinks=true,linkcolor=inkblue,citecolor=inkblue,urlcolor=inkblue,
+  pdftitle={CS781 Capstone Project - In-House Legal Intelligence System},
+  pdfauthor={Hardik Tiwari}}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+\newcommand{\pending}[1]{\textcolor{draftamber}{\textit{#1}}}
+\setlength{\parskip}{4pt}
+\setlength{\parindent}{0pt}
+\raggedbottom
+
+\title{CS781 Capstone Project:\\
+In-House Legal Intelligence System}
+\author{Hardik Tiwari\\
+230437\\
+{\tt [IITK email to verify]}\\
+Indian Institute of Technology Kanpur (IIT Kanpur)}
+\date{}
+
+\begin{document}
+\maketitle
+
+\begin{center}
+\color{draftamber}\small\bfseries WORKING DRAFT \enspace|\enspace RESULTS AND DECLARATION REQUIRE REVIEW
+\end{center}
+
+\begin{abstract}
+This project builds components for self-hosted processing of Indian legal documents. Four foundation models of approximately 50 million parameters were trained from scratch on Acts, High Court and Supreme Court judgments, and tribunal documents. The shared byte-level tokenizer and task-compatible checkpoints support six downstream workflows: named entity recognition, rhetorical role prediction, judgment prediction, statute identification, abstractive summarization, and prior case retrieval. The report separates local selection metrics from Codabench outcomes. \pending{Add the principal experimental findings and the verified summarization status.}
+\end{abstract}
+
+\section{Competition Result}
+\textbf{Codabench username} \pending{Confirm} \hfill \textbf{Roll number} 230437
+
+\begin{table}[H]
+\centering\small
+\caption{Best visible Codabench scores and finished rows.}
+\begin{tabularx}{\linewidth}{@{}cYlcc@{}}
+\toprule
+Phase & Task & Primary metric and score & Rank & Finished \\
+\midrule
+1 & Legal LM pretraining & BERTScore F1 \enspace 0.8302 & Pending & 7 \\
+2 & Legal named entity recognition & Strict macro-F1 \enspace 0.5061 & Pending & 8 \\
+3 & Rhetorical role prediction & Macro-F1 \enspace 0.4542 & Pending & 7 \\
+4 & Court judgment prediction & Macro-F1 \enspace 0.6980 & Pending & 7 \\
+5 & Legal statute identification & Macro-F1 \enspace 0.3982 & Pending & 7 \\
+6 & Abstractive summarization & BERTScore F1 \enspace Pending & Pending & Pending \\
+7 & Prior case retrieval & Micro-F1@7 \enspace 0.2593 & Pending & 8 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Phases 1--4 are transcribed from the prior project report. Phases 5 and 7 are transcribed from their Codabench submission screenshots. The visible subtotal is 44 finished rows. The course brief requires four distinct submissions in Phase 1 and six in each later phase \citep{course}.
+\pending{Confirm valid distinct counts, ranks, rank-freeze date and time zone, and the public GitHub URL.}
+
+\section{Introduction and Problem Description}
+
+The project studies how a compact legal language model can support document processing without sending case text to a hosted model. The course limits the foundation to 50--300 million parameters and specifies official data and scratch pretraining \citep{course}. The task interfaces appear in Table~\ref{tab:tasks}.
+\pending{Add your research questions and explain the scope of your experiments.}
+
+\begin{table}[H]
+\centering\small
+\caption{Inputs and outputs of the course tasks.}
+\label{tab:tasks}
+\begin{tabularx}{\linewidth}{@{}cYY@{}}
+\toprule Phase & Input & Output \\ \midrule
+1 & 512-word legal prompt & 128-word legal continuation \\
+2 & Legal document & Entity types and exact character spans \\
+3 & Ordered sentences from a legal document & One rhetorical role per sentence \\
+4 & Court judgment text & Binary outcome label \\
+5 & Legal document & Set of statute IDs \\
+6 & Long legal document & Abstractive summary \\
+7 & Query case and candidate pool & Seven ranked candidate case IDs \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\section{Data Analysis and Preprocessing}
+\subsection{Sources and official splits}
+
+The notebooks target the course dataset \texttt{Exploration-Lab/CS-781-Capstone} \citep{course}. The Phase 1 packer separates training and development by document hash. Table~\ref{tab:mix} records packed tokens and contributing documents. Each foundation targeted approximately 200 million supervised tokens during training.
+
+\begin{table}[H]
+\centering\small
+\caption{Phase 1 corpus mix measured after packing.}
+\label{tab:mix}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule Source & Train tokens & Dev tokens & Train docs & Dev docs \\ \midrule
+Acts & 24,000,000 & 200,000 & 2,914 & 37 \\
+High Courts & 108,000,000 & 900,000 & 196,540 & 1,591 \\
+Supreme Court & 60,000,000 & 500,000 & 12,140 & 88 \\
+Tribunals & 48,000,000 & 400,000 & 14,232 & 51 \\
+\midrule Total & 240,000,000 & 2,000,000 & 225,826 & 1,767 \\ \bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering\small
+\caption{Recorded downstream split sizes used in the listed workflows.}
+\begin{tabularx}{\linewidth}{@{}crrrY@{}}
+\toprule Phase & Train & Dev & Test & Counting unit \\ \midrule
+2 & 56 & 14 & 35 & Documents. Two labelled folds supply the selection split. \\
+3 & 80 & 10 & 10 & Documents. Dev has five each from Corporate Law and IT. \\
+4 & 32,305 & 994 & 1,517 & Cases after duplicate and source-ID checks. \\
+5 & 42,426 & 10,181 & 13,019 & Documents for the 100-label workflows. \\
+6 & Pending & Pending & Pending & Suite defines a holdout from labelled training cases. \\
+7 & 826 & 118 & 237 & Queries after split isolation. \\
+7 & 4,320 & 1,023 & 1,727 & Candidate documents in each query split's pool. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Corpus statistics that informed design}
+
+The NER annotation audit logged 8,393 entities and zero text mismatches against gold offsets. Phase 3 logged 21,184 sentences, including 409 longer than one token chunk. Dissent and PrecedentOverruled each had zero development examples. Phase 4 retained 18,920 label-0 and 13,385 label-1 training cases. The Phase 5 audit records 324 held-out case or text copies removed from the training split. \pending{Explain which observations motivated your choices and add Phase 6 corpus statistics when available.}
+
+\subsection{Preprocessing decisions}
+
+Phase 1 trains a 32,768-entry byte-level BPE tokenizer on course data. Phase 2 preserves original text coordinates across overlapping token windows and reconstructs spans in the original character space. Phase 3 keeps official sentence boundaries and order. Phase 4 creates overlapping 512-token chunks and Phase 5 supports a full-document feature pass over 384-token chunks. The Phase 6 full suite uses a train-only sentence salience model before tokenization and restores source order for selected passages. Phase 7 caches full token sequences, selects up to four 384-token windows per document for neural scoring, and builds separate BM25 indexes for the split-specific candidate pools.
+
+\section{Approach and Model Evolution}
+\subsection{Phase-1 foundation model}
+
+The decoder uses eight causal Transformer blocks, width 512, eight attention heads, and a SwiGLU inner width of 2,048. It uses rotary positions, RMS normalization and tied input/output embeddings \citep{vaswani,rope,rmsnorm,swiglu}. The logged parameter count is 50,340,352. Training predicts the next token over packed 1,024-token blocks. The balanced decoder uses temperature 0.80, top-$p$ 0.95, top-$k$ 50 and repetition penalty 1.04 for generation.
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  cell/.style={draw=inkblue,rounded corners=2pt,fill=inkblue!5,align=center,
+    text width=3.45cm,minimum height=12mm,font=\small},
+  >={stealth}, every path/.style={draw=inkblue}]
+\node[cell] (input) at (0,0) {Packed legal tokens\\Byte-level BPE};
+\node[cell] (blocks) at (4.4,0) {Embedding and 8 causal blocks\\RoPE, RMSNorm, SwiGLU};
+\node[cell] (output) at (8.8,0) {Tied vocabulary head\\Next-token probabilities};
+\draw[->,thick] (input.east) -- (blocks.west);
+\draw[->,thick] (blocks.east) -- (output.west);
+\end{tikzpicture}
+\caption{Phase 1 decoder. The downstream workflows reuse compatible foundation checkpoints.}
+\end{figure}
+
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  task/.style={draw=inkblue,rounded corners=2pt,fill=inkblue!5,
+    align=center,text width=2.45cm,minimum height=8mm,font=\small},
+  >={stealth}, every path/.style={draw=inkblue}]
+\node[task] (p1) at (0,0) {1. Foundations};
+\node[task] (p2) at (3.25,0) {2. Legal NER};
+\node[task] (p3) at (6.50,0) {3. Rhetorical roles};
+\node[task] (p4) at (9.75,0) {4. Judgment};
+\node[task] (p5) at (3.25,-1.25) {5. Statutes};
+\node[task] (p6) at (6.50,-1.25) {6. Summaries};
+\node[task] (p7) at (9.75,-1.25) {7. Retrieval};
+\draw[->] (p1) -- (p2);
+\draw[->] (p2) -- (p3);
+\draw[->] (p3) -- (p4);
+\draw (p1.south) -- (0,-.64) -- (9.75,-.64);
+\draw[->] (3.25,-.64) -- (p5.north);
+\draw[->] (6.50,-.64) -- (p6.north);
+\draw[->] (9.75,-.64) -- (p7.north);
+\end{tikzpicture}
+\caption{Checkpoint initialization across phases. Each downstream workflow trains for its own task.}
+\end{figure}
+
+\subsection{Transfer protocol and task heads}
+
+\begin{table}[H]
+\centering\small
+\caption{Task models linked to the top visible uploads or available workflows.}
+\begin{tabularx}{\linewidth}{@{}clY@{}}
+\toprule Phase & Initialization & Task model or workflow \\ \midrule
+2 & Phase 1 decoder & Bidirectional span boost with BIO and boundary heads. Upload mapping follows the prior report. \\
+3 & Phase 2 encoder--decoder & Sentence pooling and contextual Transformer for sequence role prediction. Upload mapping follows the prior report. \\
+4 & Phase 3 decoder & Width-48 adapters and a bidirectional GRU over chunks. Upload mapping follows the prior report. \\
+5 & Phase 1 decoder & Statute-wise attention, document BiGRU and train-only sparse residual. The extra notebook is the likely match to the generic upload. \\
+6 & Phase 1 families & Full suite or fast 04--07 variant. Candidate selection is pending. \\
+7 & Phase 1 decoder & Half-depth distilled bi-encoder with lexical/neural fusion. Candidate 07 led the visible submissions. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\pending{Confirm checkpoint-to-upload mappings and describe the design decisions and failed iterations in your own words.}
+
+\section{Experiments and Implementation Details}
+\subsection{Compute and training protocol}
+
+Available execution logs record Kaggle sessions with two Tesla T4 GPUs and mixed-precision training. The notebooks save selected checkpoints, configurations, and predictions under phase-specific working directories. The fast Phase 6 notebook caps training at 20 minutes per model by default, with the cap checked between optimizer updates. Its preprocessing, validation, generation and T4 runtime are separate from that setting.
+
+\begin{table}[H]
+\centering\small
+\caption{Selected configuration settings recorded in the notebooks. Batch units vary by task.}
+\begin{tabularx}{\linewidth}{@{}clY@{}}
+\toprule Phase & Context and effective batch & Learning rates and budget \\ \midrule
+1 & 1,024 tokens / 65,536 tokens per step & Peak $6\times10^{-4}$, 2M token warmup, 200M supervised tokens per foundation. \\
+2 & 512 tokens / 32 windows & Backbone $5\times10^{-5}$, head $5\times10^{-4}$ for the base suite. Up to 12 selection epochs with optional refit. \\
+3 & 128 tokens per chunk / 4 blocks & Encoder $2\times10^{-5}$, head $2\times10^{-4}$. Up to 6 adaptation epochs. \\
+4 & 512 tokens per chunk / 32 cases & Candidate 04 adapter rate $10^{-4}$, head rate $2\times10^{-4}$. Up to 3 adaptation epochs. \\
+5 & 384 tokens per chunk / 32 documents & Extra-model encoder $3\times10^{-5}$, head $10^{-3}$, lexical $10^{-2}$. Up to 8 epochs. \\
+6 & 1,024 source / 640 target tokens & Fast variant defaults to 16 documents per update and up to 2 epochs. \\
+7 & 384 tokens per chunk / 16 queries & Candidate 07 peak $5\times10^{-5}$. Up to 3 student epochs. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\subsection{Local evaluation}
+
+The NER workflow chooses checkpoints on a document holdout with exact-span scoring. The rhetorical-role evaluator verifies sentence counts and label vocabulary before scoring. Judgment prediction logs separate development and supplied-label test results. The extra statute model uses one development half for calibration and the other for checkpoint selection, then recalibrates on all development cases. The retrieval evaluator checks exact query coverage and seven distinct eligible IDs per query. Development metrics are reported with their selection scopes in the repository evidence tables. The course uses BERTScore and ROUGE for generation evaluation \citep{bertscore,rouge}.
+
+\subsection{Ablations and controlled comparisons}
+
+\pending{Identify which runs isolated one factor, name the variables held constant, and report your interpretation. Treat configurations that change the backbone and adaptation method together as variant comparisons.}
+
+\section{Results}
+
+\begin{table}[H]
+\centering\small
+\caption{Phase 1 common-suffix evaluation. Time is the last training invocation.}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule Architecture & Parameters & Supervised tokens & Perplexity & Hours \\ \midrule
+Decoder & 50,340,352 & 200,015,872 & 4.9339 & 1.270 \\
+Encoder--decoder & 50,341,888 & 200,001,280 & 5.7232 & 2.747 \\
+Local GQA & 50,996,736 & 200,015,872 & 4.9667 & 1.426 \\
+Hybrid & 50,348,032 & 200,015,872 & 4.6401 & 1.620 \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\begin{table}[H]
+\centering\small
+\caption{Selected local measurements. All-dev calibration uses the same development set for calibration and evaluation.}
+\begin{tabularx}{\linewidth}{@{}cYlr@{}}
+\toprule Phase & Configuration and split & Metric & Value \\ \midrule
+2 & Full decoder, selection epoch 5 & Strict macro-F1 & 0.4720 \\
+2 & Bidirectional span boost, validation-tuned & Strict macro-F1 & 0.4730 \\
+3 & Full decoder / full encoder--decoder, dev & Macro-F1 & 0.4359 / 0.3888 \\
+4 & Decoder adapters, dev / supplied-label test & Macro-F1 & 0.6906 / 0.7025 \\
+5 & Full decoder, seven-model suite dev & Macro-F1 & 0.3898 \\
+5 & Extra model, selection half / all-dev calibration & Macro-F1 & 0.3920 / 0.4083 \\
+7 & BM25 baseline, dev & Micro-F1@7 & 0.2046 \\
+7 & LoRMA+ late interaction / distilled student, dev & Micro-F1@7 & 0.2879 / 0.2713 \\
+7 & Reciprocal rank fusion ensemble, dev & Micro-F1@7 & 0.2991 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}
+\begin{axis}[width=.47\linewidth,height=4.8cm,
+  title={Phase 1 decoder},xlabel={Supervised tokens (millions)},ylabel={Training NLL},
+  xmin=0,xmax=200,ymin=0,ymax=11,xtick={0,50,100,150,200},
+  grid=major,grid style={gray!20},tick label style={font=\scriptsize},
+  label style={font=\small},title style={font=\small}]
+\addplot[inkblue,thin,no marks] table[col sep=comma,x=million_tokens,y=train_nll]
+  {evidence/phase1_decoder_curve.csv};
+\end{axis}
+\end{tikzpicture}
+\hfill
+\begin{tikzpicture}
+\begin{axis}[width=.47\linewidth,height=4.8cm,
+  title={Phase 5 extra model},xlabel={Epoch},ylabel={Selection-half macro-F1},
+  xmin=.75,xmax=7.25,ymin=.365,ymax=.397,xtick={1,2,3,4,5,6,7},
+  scaled y ticks=false,ytick={.37,.38,.39},yticklabel style={/pgf/number format/fixed},
+  grid=major,grid style={gray!20},tick label style={font=\scriptsize},
+  label style={font=\small},title style={font=\small}]
+\addplot[tealplot,thick,mark=*] table[col sep=comma,x=epoch,y=selection_half_macro_f1]
+  {evidence/phase5_extra_curve.csv};
+\end{axis}
+\end{tikzpicture}
+\caption{Training and checkpoint-selection curves taken from the recorded runs.}
+\end{figure}
+
+\pending{Add verified Phase 6 results and your own interpretation of the local and Codabench results. The evidence folder contains additional variant metrics and the Phase 5 per-label table.}
+
+\section{Error Analysis and Discussion}
+\subsection{Phase-wise failure modes}
+\pending{Use actual examples and counts. Record the relevant output, gold reference and suspected mechanism. The Phase 4 supplied-label evaluation and Phase 5 per-label evidence are available.}
+\subsection{What the metrics do not measure}
+\pending{Discuss the relationship between benchmark metrics and legal faithfulness, citing the metrics and evaluation scope you used.}
+\subsection{Limitations and what you would do next}
+\pending{Describe measured compute, context, and validation limitations, and propose specific follow-up experiments.}
+\subsection{Surprising findings}
+\pending{Choose a finding from your experiments and explain why it was unexpected.}
+
+\section{Conclusion}
+\pending{Summarize your own conclusions and what the experimental evidence supports.}
+
+\clearpage
+\begin{thebibliography}{9}
+\bibitem[CS781 course staff(2026)]{course}
+CS781 course staff, \textit{Capstone Document}, Indian Institute of Technology Kanpur, 2026. Official task, data, evaluation, and submission brief.
+\bibitem[Vaswani et al.(2017)]{vaswani}
+A. Vaswani et al., \emph{Attention Is All You Need}, NeurIPS, 2017.
+\bibitem[Su et al.(2021)]{rope}
+J. Su et al., \emph{RoFormer: Enhanced Transformer with Rotary Position Embedding}, arXiv:2104.09864, 2021.
+\bibitem[Zhang and Sennrich(2019)]{rmsnorm}
+B. Zhang and R. Sennrich, \emph{Root Mean Square Layer Normalization}, NeurIPS, 2019.
+\bibitem[Shazeer(2020)]{swiglu}
+N. Shazeer, \emph{GLU Variants Improve Transformer}, arXiv:2002.05202, 2020.
+\bibitem[Zhang et al.(2020)]{bertscore}
+T. Zhang, V. Kishore, F. Wu, K. Q. Weinberger, and Y. Artzi, \emph{BERTScore: Evaluating Text Generation with BERT}, ICLR, 2020.
+\bibitem[Lin(2004)]{rouge}
+C.-Y. Lin, \emph{ROUGE: A Package for Automatic Evaluation of Summaries}, Text Summarization Branches Out, 2004.
+\end{thebibliography}
+
+\pending{Review the notebooks' research notes and add every additional external source you relied on.}
+
+\clearpage
+\section*{LLM Usage Declaration}
+\textbf{Q1. Which LLMs did you use?}~
+OpenAI ChatGPT and Codex appear in the project history.
+\pending{Confirm exact models and vendors, and list any other tools used.}
+
+\medskip
+\textbf{Q2. For each part, state whether an LLM was used and for what purpose.}
+The table records assistance visible in the reference conversation and the preparation of this draft.
+\pending{Verify the entries and describe the full scope of each use.}
+
+\begin{table}[H]
+\centering\small
+\begin{tabularx}{\linewidth}{@{}p{.34\linewidth}lY@{}}
+\toprule Part & Recorded & Purpose or detail to confirm \\ \midrule
+Understanding concepts or papers & Yes & Architecture and literature explanations. \\
+High-level ideation & Yes & Model and workflow alternatives. \\
+Debugging ancillary snippets & Yes & Loader, runtime and export repairs. \\
+Plotting or visualization & Yes & Plots from recorded metrics. \\
+Grammar or writing style & Confirm & Record any proofreading or rewriting. \\
+Report structure or wording & Yes & LaTeX setup, factual text and evidence tables. \\
+Model architecture design & Yes & Proposed architectures and task heads appear in the project history. Verify scope. \\
+Hyperparameter search or tuning & Confirm & Training settings and development selection were discussed. Verify actual use. \\
+Analysis or conclusions & Confirm & Score and timing discussions are in the history. Record how they were used. \\
+Core training or inference code & Yes & Drafted and repaired notebook implementation appears in the project history. Verify scope. \\
+Other & Yes & Source packaging, archive checks and local evaluation replay. \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\textbf{Q3. What other sources did you refer to?}~
+The available materials include the course brief, course data, evaluator scripts, and references listed in the phase notebooks.
+\pending{Confirm every source and cite it where it influenced your work.}
+
+\medskip
+\textbf{Q4. What was your contribution?}~
+\pending{Write 8--12 sentences about your own understanding, design decisions, implementation and experiments. Include two failed attempts and what you learned from them.}
+
+\end{document}

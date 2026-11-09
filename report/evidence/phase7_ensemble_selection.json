@@ -1,0 +1,143 @@
+{
+  "members": [
+    "03_local_gqa_lorma",
+    "05_decoder_ia3",
+    "01_decoder_full"
+  ],
+  "weights": [
+    2.0,
+    1.0,
+    1.0
+  ],
+  "metrics": {
+    "micro_f1_at7": 0.2990550305725403,
+    "micro_precision_at7": 0.32566585956416466,
+    "micro_recall_at7": 0.27646454265159304,
+    "tp": 269,
+    "fp": 557,
+    "fn": 704,
+    "queries": 118
+  },
+  "candidate_metrics": [
+    {
+      "members": [
+        "03_local_gqa_lorma",
+        "05_decoder_ia3"
+      ],
+      "weights": [
+        0.5,
+        1.0
+      ],
+      "metrics": {
+        "micro_f1_at7": 0.292384658143413,
+        "micro_precision_at7": 0.31840193704600483,
+        "micro_recall_at7": 0.27029804727646456,
+        "tp": 263,
+        "fp": 563,
+        "fn": 710,
+        "queries": 118
+      }
+    },
+    {
+      "members": [
+        "03_local_gqa_lorma",
+        "05_decoder_ia3"
+      ],
+      "weights": [
+        1.0,
+        1.0
+      ],
+      "metrics": {
+        "micro_f1_at7": 0.292384658143413,
+        "micro_precision_at7": 0.31840193704600483,
+        "micro_recall_at7": 0.27029804727646456,
+        "tp": 263,
+        "fp": 563,
+        "fn": 710,
+        "queries": 118
+      }
+    },
+    {
+      "members": [
+        "03_local_gqa_lorma",
+        "05_decoder_ia3"
+      ],
+      "weights": [
+        2.0,
+        1.0
+      ],
+      "metrics": {
+        "micro_f1_at7": 0.29016120066703727,
+        "micro_precision_at7": 0.3159806295399516,
+        "micro_recall_at7": 0.2682425488180884,
+        "tp": 261,
+        "fp": 565,
+        "fn": 712,
+        "queries": 118
+      }
+    },
+    {
+      "members": [
+        "03_local_gqa_lorma",
+        "05_decoder_ia3",
+        "01_decoder_full"
+      ],
+      "weights": [
+        0.5,
+        1.0,
+        1.0
+      ],
+      "metrics": {
+        "micro_f1_at7": 0.28904947192884933,
+        "micro_precision_at7": 0.31476997578692495,
+        "micro_recall_at7": 0.2672147995889003,
+        "tp": 260,
+        "fp": 566,
+        "fn": 713,
+        "queries": 118
+      }
+    },
+    {
+      "members": [
+        "03_local_gqa_lorma",
+        "05_decoder_ia3",
+        "01_decoder_full"
+      ],
+      "weights": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "metrics": {
+        "micro_f1_at7": 0.292384658143413,
+        "micro_precision_at7": 0.31840193704600483,
+        "micro_recall_at7": 0.27029804727646456,
+        "tp": 263,
+        "fp": 563,
+        "fn": 710,
+        "queries": 118
+      }
+    },
+    {
+      "members": [
+        "03_local_gqa_lorma",
+        "05_decoder_ia3",
+        "01_decoder_full"
+      ],
+      "weights": [
+        2.0,
+        1.0,
+        1.0
+      ],
+      "metrics": {
+        "micro_f1_at7": 0.2990550305725403,
+        "micro_precision_at7": 0.32566585956416466,
+        "micro_recall_at7": 0.27646454265159304,
+        "tp": 269,
+        "fp": 557,
+        "fn": 704,
+        "queries": 118
+      }
+    }
+  ]
+}

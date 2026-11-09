@@ -1,0 +1,7 @@
+torch>=2.3
+tokenizers>=0.20,<0.24
+huggingface_hub>=0.26,<2
+ijson>=3.2,<4
+requests>=2.31,<3
+sacrebleu>=2.4,<3
+rouge-score>=0.1.2,<0.2

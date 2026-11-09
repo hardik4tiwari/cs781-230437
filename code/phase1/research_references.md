@@ -1,0 +1,18 @@
+# Research sources used in the Phase-1 notebook
+- Mixed precision: https://arxiv.org/abs/1710.03740
+- PyTorch DDP: https://arxiv.org/abs/2006.15704
+- FlashAttention: https://arxiv.org/abs/2205.14135
+- FlashAttention-2: https://arxiv.org/abs/2307.08691
+- Official hardware support: https://github.com/Dao-AILab/flash-attention
+- RMSNorm: https://arxiv.org/abs/1910.07467
+- GQA: https://arxiv.org/abs/2305.13245
+- Activation checkpointing: https://arxiv.org/abs/1604.06174
+- Compute-optimal training: https://arxiv.org/abs/2203.15556
+- RoPE: https://arxiv.org/abs/2104.09864
+- SwiGLU: https://arxiv.org/abs/2002.05202
+- SDPA: https://docs.pytorch.org/docs/stable/generated/torch.nn.functional.scaled_dot_product_attention.html
+- AMP: https://docs.pytorch.org/docs/stable/notes/amp_examples.html
+- DDP: https://docs.pytorch.org/docs/stable/generated/torch.nn.parallel.DistributedDataParallel.html
+- Performance tuning: https://docs.pytorch.org/tutorials/recipes/recipes/tuning_guide.html
+- Official dataset: https://huggingface.co/datasets/Exploration-Lab/CS-781-Capstone
+- Course brief: https://docs.google.com/document/d/1olqoT5KPhf5CSJLBNjXGyKyyyQDBr6jcnWqPUh5cNk4/edit

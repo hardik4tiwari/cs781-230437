@@ -1,0 +1,9 @@
+{
+  "sentences": 21184,
+  "tokens": 868718,
+  "chunks": 21695,
+  "long_sentences": 409,
+  "max_sentence_tokens": 1185,
+  "empty_sentences": 0,
+  "training_duplicate_documents_removed": []
+}

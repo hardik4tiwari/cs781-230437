@@ -1,0 +1,41 @@
+{
+  "train": {
+    "raw_rows": 42750,
+    "case_count": 42750,
+    "exact_copies_removed": 0,
+    "repeated_cases_combined": 0,
+    "cases_with_different_label_sets": 0,
+    "policy": "One original ID per case; distinct texts concatenate in source order; supplied train/dev label sets union. Test labels are discarded."
+  },
+  "dev": {
+    "raw_rows": 10181,
+    "case_count": 10181,
+    "exact_copies_removed": 0,
+    "repeated_cases_combined": 0,
+    "cases_with_different_label_sets": 0,
+    "policy": "One original ID per case; distinct texts concatenate in source order; supplied train/dev label sets union. Test labels are discarded."
+  },
+  "test": {
+    "raw_rows": 13019,
+    "case_count": 13019,
+    "exact_copies_removed": 0,
+    "repeated_cases_combined": 0,
+    "cases_with_different_label_sets": 0,
+    "policy": "One original ID per case; distinct texts concatenate in source order; supplied train/dev label sets union. Test labels are discarded."
+  },
+  "dev_test_source_overlap_removed": 0,
+  "training_held_out_cases_or_text_copies_removed": 324,
+  "empty_documents": 0,
+  "all_tokens_retained": true,
+  "case_counts": {
+    "train": 42426,
+    "dev": 10181,
+    "test": 13019,
+    "all": 52607,
+    "every": 65626
+  },
+  "label_count_including_id_gaps": 100,
+  "labels_without_training_positives": 0,
+  "adaptation_view": "First, last, then statute-cue windows; full branch retains all windows.",
+  "full_feature_gib_per_512d_parent": 0.7107467651367188
+}

@@ -1,0 +1,9 @@
+{
+  "local_archive": "230437.zip",
+  "visible_codabench_submission_id": "1014024",
+  "local_prediction_sha256": "e89aa95ffa39de7df637e422f767783a63093ce4f532e391b579c072d6511275",
+  "test_cases": 13019,
+  "predicted_labels": 57733,
+  "mean_predicted_labels": 4.434518780244258,
+  "match_scope": "Exact match to notebook case count and mean predicted labels. A notebook-side or Codabench payload hash was unavailable."
+}

@@ -1,0 +1,9 @@
+candidate,holdout_strict_macro_f1,scope
+01_decoder_full,0.472030,selection
+02_encoder_decoder_full,0.42354,selection
+03_local_gqa_lora,0.43654,selection
+04_hybrid_partial,0.4253,selection
+05_decoder_lorma_span,0.39906,selection
+06_decoder_adapter,0.42869,selection
+07_decoder_student_kd,0.4248,selection
+08_bidir_span_boost,0.47304,"validation-tuned checkpoint, model and thresholds"

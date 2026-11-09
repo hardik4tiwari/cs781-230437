@@ -1,0 +1,6 @@
+label,architecture,variant,heldout_examples,ROUGE_L_F1_0_to_1,SacreBLEU4_0_to_100,seconds_including_launch,BLEU_signature
+decoder_balanced,decoder,balanced,20,0.2172451718855013,7.7549938628114745,16.804589012001088,nrefs:1|case:mixed|eff:no|tok:13a|smooth:exp|version:2.6.0
+decoder_focused,decoder,focused,20,0.21437915719423786,9.197748998323318,17.092613027998595,nrefs:1|case:mixed|eff:no|tok:13a|smooth:exp|version:2.6.0
+encoder_decoder_balanced,encoder_decoder,balanced,20,0.17556487062198173,6.351593368207678,50.97025626699906,nrefs:1|case:mixed|eff:no|tok:13a|smooth:exp|version:2.6.0
+local_gqa_balanced,local_gqa,balanced,20,0.1815048614215578,4.6530958926779595,24.627881850999984,nrefs:1|case:mixed|eff:no|tok:13a|smooth:exp|version:2.6.0
+hybrid_balanced,hybrid,balanced,20,0.20913527618107533,11.108184362229297,15.973640864001936,nrefs:1|case:mixed|eff:no|tok:13a|smooth:exp|version:2.6.0
