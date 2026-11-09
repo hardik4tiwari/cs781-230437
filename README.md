@@ -14,7 +14,7 @@ Code deliverables for Hardik Tiwari (230437), IIT Kanpur. Each phase directory c
 
 ## Featured models
 
-The project repository is [hardik4tiwari/cs781-230437](https://github.com/hardik4tiwari/cs781-230437). The table points to the exact candidate IDs in each phase's runnable notebook. Phases 1–4 start with the reported competition winner and use local evaluation to select the two remaining models because full per-candidate Codabench scores were unavailable. Phases 5 and 7 use visible Codabench scores for individual models. The original suites also preserve the comparison runs and any teacher dependencies.
+The project repository is [hardik4tiwari/cs781-230437](https://github.com/hardik4tiwari/cs781-230437). The table points to the exact candidate IDs in each phase's runnable notebook. Phases 1–4 start with the reported competition winner and use local evaluation to select the two remaining models because full per-candidate Codabench scores were unavailable. Phases 5–7 use visible Codabench scores for individual models. The original suites also preserve the comparison runs and any teacher dependencies.
 
 | Phase | Models featured in the package |
 | --- | --- |
@@ -23,7 +23,7 @@ The project repository is [hardik4tiwari/cs781-230437](https://github.com/hardik
 | 3 | 02 full encoder–decoder, 01 full decoder, 07 distilled decoder |
 | 4 | 04 decoder adapters, 01 full decoder, 03 local GQA LoRMA+ |
 | 5 | Extra full-document decoder, 02 partial encoder–decoder, 01 full decoder |
-| 6 | Ranking pending. Full encoder–decoder, decoder LoRMA+, and distilled decoder are included as unranked candidates. |
+| 6 | 04 Hybrid LoRA, 06 distilled decoder, 05 decoder soft prompts |
 | 7 | 07 distilled decoder, 06 decoder cross-encoder, 03 local GQA LoRMA+ |
 
 ## Run a phase

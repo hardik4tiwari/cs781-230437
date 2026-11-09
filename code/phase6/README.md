@@ -1,22 +1,20 @@
 # Phase 6 · Abstractive summarization
 
-Attach the Phase 1 foundations and tokenizer, plus the official `Phase_6_Summ` data. Set `PHASE1_ROOT` and `DATA_ROOT` in the notebook. Use two T4 GPUs. The notebooks create a development split from labelled training data and keep test references out of training.
+Attach the Phase 1 foundations and tokenizer plus the official `Phase_6_Summ` data. Set `PHASE1_ROOT` and `DATA_ROOT` in the notebook. Use two T4 GPUs. Both notebooks create a development split from labelled training data and exclude test references.
 
-| Notebook | Candidates and workflow |
-| --- | --- |
-| `summarization_suite.ipynb` | Six candidates with a train-only salience selector: full encoder–decoder (01), decoder LoRMA+ (02), local GQA adapters (03), hybrid LoRA (04), decoder soft prompts (05), and a smaller decoder with sequence-level distillation (06). Includes the nested-summary loader repair. |
-| `summarization_fast_04_to_07.ipynb` | Fast hybrid LoRA (04), decoder soft prompts (05), half-depth decoder distilled from 04 with teacher logits (06), and encoder–decoder cross-attention tuning (07). Uses a shared token cache and a shorter default source/target budget. |
+## Three featured models
 
-Fast candidate 06 trains or reuses 04 as its teacher. The default 20-minute cap is checked between training updates. Data preparation, validation, and test generation have separate runtimes. Use separate output directories for the two variants because candidate IDs overlap and the implementations differ.
+The completed submissions came from `summarization_fast_04_to_07.ipynb`. Select the candidate IDs below in `RUN_MODELS` to export these three models. Candidate 06 uses candidate 04 as its teacher. The fourth comparison, 07 encoder–decoder cross-attention tuning, scored 0.8050 on Codabench.
 
-The reference chat records synthetic CPU smoke checks. A completed GPU run, local evaluation, official score, and submission count have yet to be verified. When artifacts arrive, record the notebook variant, candidate IDs, and scores before identifying the best model.
+| Rank among Phase 6 candidates | Candidate ID | Codabench BERTScore F1 | Local probe BERTScore F1 |
+| --- | --- | --- | --- |
+| 1 | `04_hybrid_lora` | 0.8253 | 0.8221 |
+| 2 | `06_decoder_student_kd` | 0.8218 | 0.8240 |
+| 3 | `05_decoder_prompt` | 0.8070 | 0.8029 |
 
-## Three unranked candidates
+The local probe contains 24 development documents. All four saved archives cover the 100 official test IDs, contain distinct prediction sets, and match the saved run receipts. `src_fast/` matches the executed source, and `configs/` contains the configurations from that run. The notebook regenerates paths for a new Kaggle session.
 
-The code includes all candidates from both Phase 6 notebooks. The following full-suite candidates cover full tuning, multiplicative adaptation, and distillation. Rank them against the other completed candidates once comparable development or Codabench scores are available. These IDs refer to `summarization_suite.ipynb`. Candidate 06 in the fast notebook uses a different distillation setup.
+## Notebook variants
 
-| Candidate ID | Method |
-| --- | --- |
-| `01_encoder_decoder_full` | Full encoder–decoder tuning |
-| `02_decoder_lorma` | Decoder LoRMA+ |
-| `06_decoder_student_kd` | Smaller decoder with sequence-level knowledge distillation |
+- `summarization_fast_04_to_07.ipynb` uses a shared train-only sentence selector, a 1,024-token source budget, and a 640-token target budget. Each completed run used 384 optimizer updates. Training took 1.54–4.30 minutes per model, with a separate 1.02–1.92 minutes for export.
+- `summarization_suite.ipynb` preserves the earlier full suite for comparison. It covers full encoder–decoder tuning, decoder LoRMA+, local GQA adapters, hybrid LoRA, decoder soft prompts, and sequence-level distillation. Use separate output directories because some candidate numbers overlap with those of the fast suite.

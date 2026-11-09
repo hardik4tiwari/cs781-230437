@@ -42,7 +42,7 @@ Indian Institute of Technology Kanpur (IIT Kanpur)}
 
 \begin{abstract}
 
-This project trains compact models for Indian legal text so the processing can run on infrastructure controlled by the document holder. Four foundations of about 50 million parameters were trained from scratch on Acts and decisions from High Courts, the Supreme Court and tribunals. Their tokenizer and checkpoints support six downstream tasks: entity recognition, rhetorical role labeling, judgment prediction, statute identification, summarization and precedent retrieval. The balanced decoder recorded 0.8302 BERTScore F1 in the pretraining competition. The distilled retriever recorded 0.2593 Micro-F1@7, the highest visible Phase 7 score. The report distinguishes development results from competition scores and describes the summarization code, for which no competition submission had been made.
+This project trains compact models for Indian legal text so the processing can run on infrastructure controlled by the document holder. Four foundations of about 50 million parameters were trained from scratch on Acts and decisions from High Courts, the Supreme Court and tribunals. Their tokenizer and checkpoints support six downstream tasks: entity recognition, rhetorical role labeling, judgment prediction, statute identification, summarization and precedent retrieval. The balanced decoder recorded 0.8302 BERTScore F1 in the pretraining competition. The distilled retriever recorded 0.2593 Micro-F1@7, the highest visible Phase 7 score. Hybrid LoRA scored 0.8253 BERTScore F1 for summarization. The report distinguishes these competition scores from local development estimates.
 
 \end{abstract}
 
@@ -59,22 +59,22 @@ This project trains compact models for Indian legal text so the processing can r
 \toprule
 Phase & Task & Primary metric (value) & Rank & Valid submissions \\
 \midrule
-1 & Legal LM pretraining & BERTScore F1 \enspace 0.8302 & --- & 7 \\
-2 & Legal named entity recognition & Strict macro-F1 \enspace 0.5061 & --- & 8 \\
-3 & Rhetorical role prediction & Macro-F1 \enspace 0.4542 & --- & 7 \\
-4 & Court judgment prediction & Macro-F1 \enspace 0.6980 & --- & 7 \\
-5 & Legal statute identification & Macro-F1 \enspace 0.3982 & --- & 7 \\
-6 & Abstractive summarization & BERTScore F1 \enspace not submitted & --- & 0 \\
-7 & Prior case retrieval & Micro-F1@7 \enspace 0.2593 & --- & 8 \\
+1 & Legal LM pretraining & BERTScore F1 \enspace 0.8302 & 81 & 7 \\
+2 & Legal named entity recognition & Strict macro-F1 \enspace 0.5061 & 80 & 8 \\
+3 & Rhetorical role prediction & Macro-F1 \enspace 0.4542 & 95 & 7 \\
+4 & Court judgment prediction & Macro-F1 \enspace 0.6980 & 80 & 7 \\
+5 & Legal statute identification & Macro-F1 \enspace 0.3982 & 37 & 7 \\
+6 & Abstractive summarization & BERTScore F1 \enspace 0.8253 & 112 & 4 \\
+7 & Prior case retrieval & Micro-F1@7 \enspace 0.2593 & 115 & 8 \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
 \noindent
-\textbf{Total valid Codabench submissions across all phases:} 44 visible finished rows; distinct valid total unverified.\\
-\textbf{Date ranks were recorded:} No verified rank snapshot.
+\textbf{Total valid Codabench submissions across all phases:} 48 visible finished rows.\\
+\textbf{Date ranks were recorded:} 9 November 2026 (IST), as reported by the student.
 
-The Phase 1--4 figures come from the earlier project record, while Phases 5 and 7 can be checked against saved Codabench submission views. Together they account for 44 visible finished rows. Phase 6 had no submission at the time of this report. The other six phases show at least seven finished rows each in the available submission views. The available records do not establish whether all of those rows represent distinct valid submissions. The course requires four distinct submissions in Phase 1 and six in each subsequent phase \citep{course}.
+The Phase 1--4 scores come from the earlier project record. The Phase 5--7 scores come from saved Codabench submission views. The counts in the table are finished rows. The four Phase 6 archives have distinct prediction sets. This meets the four-submission minimum stated in the report template, but falls two short of the six-submission minimum for downstream phases in the capstone brief \citep{course}. The finished-row counts alone do not establish distinct valid totals for every phase.
 
 \section{Introduction and Problem Description}
 
@@ -127,7 +127,7 @@ Tribunals & 48,000,000 & 400,000 & 14,232 & 51 \\
 3 & 80 & 10 & 10 & Documents. Dev has five each from Corporate Law and IT. \\
 4 & 32,305 & 994 & 1,517 & Cases after duplicate and source-ID checks. \\
 5 & 42,426 & 10,181 & 13,019 & Documents for the 100-label workflows. \\
-6 & --- & --- & --- & Code defines a holdout from labelled training cases. \\
+6 & 6,144 & 96 & 100 & Documents used by the fast summarization run. \\
 7 & 826 & 118 & 237 & Queries after split isolation. \\
 7 & 4,320 & 1,023 & 1,727 & Candidate documents in each query split's pool. \\
 \bottomrule
@@ -140,11 +140,11 @@ High Court documents supplied 45\% of the packed training tokens and 87\% of the
 
 The entity audit covered 8,393 spans and found no text mismatches at the original offsets. The longest entity covered 50 tokens. The Phase 2 boost training split contained 148 respondent-counsel spans and 1,201 date spans. The 14-document development split included witnesses in only two documents. Phase 3 had 21,184 sentences, 409 of which exceeded one token chunk. The development set contained 2,142 sentences across ten documents, with no examples of Dissent or PrecedentOverruled. These counts describe why exact character offsets and sentence boundaries matter, and why rare-label scores on these splits need context.
 
-In Phase 4, removing 5,082 exact training copies left 32,305 cases. Labels 0 and 1 accounted for 18,920 and 13,385 of them. In Phase 5, 324 cases or text copies that overlapped a held-out split were removed. The least frequent of 100 statutes had 269 training positives, compared with 11,613 for the most frequent. Development cases had a median of three statute labels and a mean of 3.92. Phase 7 removed one training query that also appeared in a held-out split and kept a separate candidate pool for each split. The 118 development queries had 8.25 relevant candidates each on average. Median whitespace-delimited document length was 4,620 words for queries and 4,036 for candidates. The corresponding 90th percentiles were about 16,410 and 16,731 words. The saved runs contain no Phase 6 corpus audit.
+In Phase 4, removing 5,082 exact training copies left 32,305 cases. Labels 0 and 1 accounted for 18,920 and 13,385 of them. In Phase 5, 324 cases or text copies that overlapped a held-out split were removed. The least frequent of 100 statutes had 269 training positives, compared with 11,613 for the most frequent. Development cases had a median of three statute labels and a mean of 3.92. Phase 7 removed one training query that also appeared in a held-out split and kept a separate candidate pool for each split. The 118 development queries had 8.25 relevant candidates each on average. Median whitespace-delimited document length was 4,620 words for queries and 4,036 for candidates. The corresponding 90th percentiles were about 16,410 and 16,731 words. The Phase 6 training file contained 7,028 usable pairs. Documents and references had median lengths of 3,129 and 638 words. The median document-to-reference length ratio was 4.6:1. 76.2\% of reference bigrams appeared in their source under casefolded whitespace tokenization.
 
 \subsection{Preprocessing}
 
-The tokenizer has 32,768 byte-level BPE entries. Original case and punctuation are retained, so section numbers and citations remain available as text. The entity workflow tokenizes overlapping windows while retaining coordinates in the source string. The role classifier uses the supplied sentence boundaries, pooling multiple token chunks when a sentence exceeds its window. The judgment classifier groups overlapping 512-token chunks into a case representation. The extra statute model processes the full document in 384-token chunks. The full summarization suite learns sentence salience from training pairs and restores the source order of the selected passages. The retrieval workflow caches the complete token sequences, uses at most four 384-token windows per document for neural scoring, and builds a BM25 index for each split.
+The tokenizer has 32,768 byte-level BPE entries. Original case and punctuation are retained, so section numbers and citations remain available as text. The entity workflow tokenizes overlapping windows while retaining coordinates in the source string. The role classifier uses the supplied sentence boundaries, pooling multiple token chunks when a sentence exceeds its window. The judgment classifier groups overlapping 512-token chunks into a case representation. The extra statute model processes the full document in 384-token chunks. The fast summarizer learns sentence salience from 1,200 training pairs and restores the source order of the selected passages. The retrieval workflow caches the complete token sequences, uses at most four 384-token windows per document for neural scoring, and builds a BM25 index for each split.
 
 \section{Approach and Model Evolution}
 \subsection{Phase-1 foundation model}
@@ -202,7 +202,7 @@ The causal decoder has eight Transformer blocks with hidden width 512, eight att
 3 & Phase 2 encoder--decoder & Sentence pooling and contextual Transformer for sequence role prediction. Upload mapping follows the prior report. \\
 4 & Phase 3 decoder & Width-48 adapters and a bidirectional GRU over chunks. Upload mapping follows the prior report. \\
 5 & Phase 1 decoder & Statute-wise attention, document BiGRU and train-only sparse residual. The extra notebook is the likely match to the generic upload. \\
-6 & Phase 1 families & Full suite or fast 04--07 variant. No measured model ranking is available. \\
+6 & Phase 1 families & Hybrid LoRA (04) led the four fast submissions. The distilled decoder (06) uses it as a teacher. \\
 7 & Phase 1 decoder & Half-depth distilled bi-encoder with lexical/neural fusion. Candidate 07 led the visible submissions. \\
 \bottomrule
 \end{tabularx}
@@ -229,7 +229,7 @@ The extra model uses label-wise attention and a bidirectional GRU over document 
 
 \subsection{Phase 6 - Abstractive summarization}
 
-Both notebooks initialize from Phase 1 foundations. The full suite includes encoder--decoder models and prefix-conditioned causal generators. A train-only selector scores sentences before generation and passes selected text in its original order. Decoding supports a token limit, a length penalty and a repeated n-gram block. The fast variant uses a shorter source and target budget and includes a smaller distilled decoder. Phase 6 had not been submitted.
+The submitted fast suite initializes from Phase 1 and compares hybrid LoRA, decoder soft prompts, a half-depth decoder distilled from hybrid teacher logits, and encoder--decoder cross-attention tuning. The selector retains opening and closing text and ranks candidate sentences by learned salience and redundancy. The source limit is 1,024 tokens. The hybrid uses a decoding range of 48--640 new tokens and blocks repeated four-grams. Its LoRA rank is 16 with scale parameter 32.
 
 \subsection{Phase 7 - Prior Case Retrieval (PCR)}
 
@@ -238,7 +238,7 @@ The distilled retriever uses a shared bi-encoder for queries and candidates. It 
 \section{Experiments and Implementation Details}
 \subsection{Compute and training protocol}
 
-The saved Kaggle logs show training on two Tesla T4 GPUs with mixed precision. Each workflow records the run configuration, selected checkpoint and prediction files in a phase-specific directory. The fast summarization notebook sets a 20-minute training cap per model and checks it between optimizer updates. Preprocessing, validation and generation sit outside that cap. The runtime figures reported here come from completed logs.
+The saved Kaggle logs show training on two Tesla T4 GPUs with mixed precision. Each workflow records the run configuration, selected checkpoint and prediction files in a phase-specific directory. The fast summarization notebook sets a 20-minute training cap per model and checks it between optimizer updates. Preprocessing, validation and generation sit outside that cap. The four Phase 6 runs used 384 optimizer updates each. Logged training times ranged from 1.54 to 4.30 minutes per model, with a separate 1.02--1.92 minutes for export.
 
 \begin{table}[H]
 \centering\scriptsize
@@ -249,24 +249,24 @@ The saved Kaggle logs show training on two Tesla T4 GPUs with mixed precision. E
 \toprule
 Hyperparameter & P1 & P2 & P3 & P4 & P5 & P6 (fast) & P7 \\
 \midrule
-Parameters (M) & 50.34 & 51.78 & 51.54 & 51.30 & --- & --- & 33.89 \\
+Parameters (M) & 50.34 & 51.78 & 51.54 & 51.30 & --- & 51.67 & 33.89 \\
 Context (tokens) & 1,024 & 768 & 128 & 512 & 384 & 1,024 / 640 & 384 \\
-Encoder LR & $6\!\times\!10^{-4}$ & $2\!\times\!10^{-5}$ & $2\!\times\!10^{-5}$ & $10^{-4}$ & $3\!\times\!10^{-5}$ & Varies & $5\!\times\!10^{-5}$ \\
-Head LR & --- & $2\!\times\!10^{-4}$ & $2\!\times\!10^{-4}$ & $2\!\times\!10^{-4}$ & $10^{-3}$ & Varies & --- \\
+Encoder LR & $6\!\times\!10^{-4}$ & $2\!\times\!10^{-5}$ & $2\!\times\!10^{-5}$ & $10^{-4}$ & $3\!\times\!10^{-5}$ & $2\!\times\!10^{-4}$ & $5\!\times\!10^{-5}$ \\
+Head LR & --- & $2\!\times\!10^{-4}$ & $2\!\times\!10^{-4}$ & $2\!\times\!10^{-4}$ & $10^{-3}$ & --- & --- \\
 Effective batch & 65,536 & 16 & 4 & 32 & 32 & 16 & 16 \\
 Epoch or step limit & 200M tokens & 24 epochs & 6 epochs & 3 epochs & 8 epochs & 2 epochs & 3 epochs \\
-Dropout & 0.00 & 0.10 / 0.20 & 0.05 / 0.25 & 0.05 / 0.20 & 0.15 & Varies & 0.05 \\
+Dropout & 0.00 & 0.10 / 0.20 & 0.05 / 0.25 & 0.05 / 0.20 & 0.15 & 0.05 & 0.05 \\
 Output rule & Sampling & Span cutoff & Transitions & 0.5 cutoff & Per-label cutoff & Token cap & Top 7 \\
 \bottomrule
 \end{tabular}
 
 \smallskip
-\parbox{\linewidth}{\footnotesize Batches count tokens (P1), windows (P2), blocks (P3), documents (P4--P6) or queries (P7). P4 shows the adapter rate in the encoder row. P5's sparse branch uses $10^{-2}$. Where two dropout values are shown, they refer to the backbone and head. P6 lists source and target limits. Dashes indicate unavailable or inapplicable values.}
+\parbox{\linewidth}{\footnotesize Batches count tokens (P1), windows (P2), blocks (P3), documents (P4--P6) or queries (P7). P4 shows the adapter rate in the encoder row. P5's sparse branch uses $10^{-2}$. Where two dropout values are shown, they refer to the backbone and head. P6 lists source and target limits and the hybrid LoRA learning rate. Dashes indicate unavailable or inapplicable values.}
 \end{table}
 
 \subsection{Local evaluation}
 
-The NER workflow selects checkpoints on held-out documents. Scoring requires an exact label and span match. The rhetorical-role evaluator checks that the prediction contains one valid label per sentence. In judgment prediction, the supplied-label test run was logged separately from development selection. The extra statute model used one development half to calibrate thresholds and the other to select a checkpoint, then recalibrated on all development cases. The retrieval evaluator checks query coverage and requires seven distinct eligible candidates per query. The generation tasks use BERTScore and ROUGE \citep{bertscore,rouge}.
+The NER workflow selects checkpoints on held-out documents. Scoring requires an exact label and span match. The rhetorical-role evaluator checks that the prediction contains one valid label per sentence. In judgment prediction, the supplied-label test run was logged separately from development selection. The extra statute model used one development half to calibrate thresholds and the other to select a checkpoint, then recalibrated on all development cases. The retrieval evaluator checks query coverage and requires seven distinct eligible candidates per query. The generation tasks use BERTScore and ROUGE \citep{bertscore,rouge}. Phase 6 computes token loss on a fixed development subset and evaluates generated summaries on a shared 24-document probe.
 
 \subsection{Ablations and controlled comparisons}
 
@@ -334,7 +334,7 @@ Hybrid & 50,348,032 & 200,015,872 & 4.6401 & 1.620 \\
 \caption{Training and checkpoint-selection curves taken from the recorded runs.}
 \end{figure}
 
-The extra statute model peaked at epoch 4 on the selection half. Its later score of 0.4083 used thresholds calibrated on all development cases and is reported separately. No comparable Phase 6 score was available. The per-variant tables below and the repository evidence include additional scores and Phase 5 per-label metrics.
+The extra statute model peaked at epoch 4 on the selection half. Its later score of 0.4083 used thresholds calibrated on all development cases and is reported separately. The Phase 6 probe and competition results use separate sets. The distilled model led the probe on BERTScore F1, while hybrid LoRA led on both ROUGE measures and on competition BERTScore F1.
 
 
 
@@ -374,7 +374,23 @@ ID & P2 strict F1 & P3 macro F1/P/R & P4 macro F1, P/R & P5 macro/micro/SA & P7 
 \end{tabular}
 
 \smallskip
-\parbox{\linewidth}{\footnotesize Candidate IDs are phase-specific. P4 precision and recall refer to the positive class. P5 shows the seven-model suite. Phase 6 had no comparable local score.}
+\parbox{\linewidth}{\footnotesize Candidate IDs are phase-specific. P4 precision and recall refer to the positive class. P5 shows the seven-model suite. See Table~\ref{tab:phase6probe} for the Phase 6 probe.}
+\end{table}
+
+\begin{table}[H]
+\centering\small
+\caption{Phase 6 development probe on 24 documents. Training time excludes preprocessing and export.}
+\label{tab:phase6probe}
+\begin{tabular}{@{}lrrrr@{}}
+\toprule
+Variant & BERTScore F1 & ROUGE-1 F1 & ROUGE-L F1 & Train (min) \\
+\midrule
+04 Hybrid LoRA & 0.8221 & 0.4089 & 0.2233 & 4.30 \\
+05 Decoder soft prompt & 0.8029 & 0.3423 & 0.1941 & 2.93 \\
+06 Distilled decoder & 0.8240 & 0.3869 & 0.2160 & 3.27 \\
+07 Cross-attention & 0.8096 & 0.3726 & 0.2110 & 1.54 \\
+\bottomrule
+\end{tabular}
 \end{table}
 
 \begin{table}[H]
@@ -392,7 +408,10 @@ Phase & Variant & Codabench primary metric \\
 5 & Extra full-document decoder (likely upload match) & 0.3982 \\
 5 & 02 Partial encoder--decoder & 0.3835 \\
 5 & 01 Full decoder & 0.3807 \\
-6 & No submission & --- \\
+6 & 04 Hybrid LoRA & 0.8253 \\
+6 & 06 Distilled decoder & 0.8218 \\
+6 & 05 Decoder soft prompt & 0.8070 \\
+6 & 07 Encoder--decoder cross-attention & 0.8050 \\
 7 & 07 Distilled decoder & 0.2593 \\
 7 & RRF ensemble & 0.2552 \\
 7 & 06 Decoder cross-encoder & 0.2522 \\
@@ -401,7 +420,7 @@ Phase & Variant & Codabench primary metric \\
 \end{tabular}
 \end{table}
 
-Table~\ref{tab:leaderboard} gives the documented best competition scores. Table~\ref{tab:variants} lists the available submission-level results. The three featured implementations per phase are identified in the repository's phase guides. Phase 6 candidates are unranked.
+Table~\ref{tab:leaderboard} gives the documented best competition scores. Table~\ref{tab:variants} lists the available submission-level results. The three featured implementations per phase are identified in the repository's phase guides. The three Phase 6 selections are 04, 06 and 05 in competition score order.
 
 \section{Error Analysis and Discussion}
 
@@ -411,8 +430,9 @@ The Phase 1 comparison uses 20 held-out prompts. There is no manual audit of leg
 
 In Corporate Law development data, the Phase 3 full decoder predicted Dissent 19 times despite having no gold examples. It predicted no Issue labels against three gold instances. At threshold 0.5, the Phase 4 adapter model missed 270 of 762 positive cases and incorrectly labeled 180 of 755 negatives as positive. The confusion matrix does not show where the decisive passage appeared.
 
-In Phase 5, the full decoder predicted statute 84 on 151 documents and recovered 24 of the 68 gold instances, giving 0.353 recall and 0.159 precision. Phase 6 had no verified outputs to review. The Phase 7 student recovered 244 of 973 relevant development pairs. Of its 826 returned pairs, 582 were outside the annotated relevant set. The BM25 shortlist retained 61.3\% of relevant pairs, giving a maximum Micro-F1@7 of 0.4936 for a ranker confined to that shortlist.
+In Phase 5, the full decoder predicted statute 84 on 151 documents and recovered 24 of the 68 gold instances, giving 0.353 recall and 0.159 precision. In Phase 6, the 640-token target cap clipped 3,710 of 6,144 training references (60.38\%). This bounds the reference content available for supervision. The Phase 7 student recovered 244 of 973 relevant development pairs. Of its 826 returned pairs, 582 were outside the annotated relevant set. The BM25 shortlist retained 61.3\% of relevant pairs, giving a maximum Micro-F1@7 of 0.4936 for a ranker confined to that shortlist.
 
+\clearpage
 \subsection{What the metrics do not measure}
 
 BERTScore measures similarity to a reference using contextual representations, while ROUGE measures overlapping text units \citep{bertscore,rouge}. A summary can score well and still misstate a holding. In entity recognition, one incorrect boundary is enough to lose an otherwise plausible match. In retrieval, Micro-F1@7 counts annotated relevance within the seven returned items, with every evaluated query contributing its set of pairs. Those measures serve different tasks and do not measure readiness for legal use.
@@ -427,7 +447,7 @@ The development retrieval ensemble reached 0.2991 Micro-F1@7, ahead of the disti
 
 \section{Conclusion}
 
-The four foundations were trained from scratch on the official corpus. Changing the decoder sampling policy improved BLEU-4 but reduced ROUGE-L on the held-out prompts. In retrieval, adding a BM25 contribution increased development Micro-F1@7 for candidate 01. The compact distilled retriever led the visible competition results for Phase 7. These comparisons apply to their recorded splits and do not establish legal reliability. Phase 6 had not been submitted.
+The four foundations were trained from scratch on the official corpus. Changing the decoder sampling policy improved BLEU-4 but reduced ROUGE-L on the held-out prompts. In retrieval, adding a BM25 contribution increased development Micro-F1@7 for candidate 01. The compact distilled retriever led the visible competition results for Phase 7. These comparisons apply to their recorded splits and do not establish legal reliability. In summarization, hybrid LoRA led the four submitted variants, while the distilled decoder led the small development probe on BERTScore F1.
 
 \clearpage
 \section*{LLM Usage Declaration}

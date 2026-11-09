@@ -1,8 +1,8 @@
 phase,metric,best_visible_score,finished_rows_visible,source,rank
-1,BERTScore F1,0.8302,7,prior project report draft,
-2,Strict macro-F1,0.5061,8,prior project report draft,
-3,Macro-F1,0.4542,7,prior project report draft,
-4,Macro-F1,0.6980,7,prior project report draft,
-5,Macro-F1,0.3982,7,Codabench My Submissions screenshot,
-6,BERTScore F1,,0,student confirmed no submission,
-7,Micro-F1@7,0.2593,8,Codabench My Submissions screenshot,
+1,BERTScore F1,0.8302,7,prior project report draft,81
+2,Strict macro-F1,0.5061,8,prior project report draft,80
+3,Macro-F1,0.4542,7,prior project report draft,95
+4,Macro-F1,0.6980,7,prior project report draft,80
+5,Macro-F1,0.3982,7,Codabench My Submissions screenshot,37
+6,BERTScore F1,0.8253,4,Codabench My Submissions screenshot,112
+7,Micro-F1@7,0.2593,8,Codabench My Submissions screenshot,115

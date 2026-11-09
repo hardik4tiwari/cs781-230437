@@ -1,0 +1,43 @@
+{
+  "duplicate_id_copies_removed": {
+    "train": 0,
+    "test": 0
+  },
+  "normalized_document_copies_collapsed": 27,
+  "copy_groups_with_multiple_references": 0,
+  "dev_group_count": 96,
+  "test_references": "discarded without inspection; never cached",
+  "seed": 781,
+  "counts": {
+    "dev": 96,
+    "train": 6144,
+    "test": 100
+  },
+  "selector_fit_documents": 1200,
+  "selector_shortlist": 96,
+  "source_limit": 1024,
+  "target_limit": 640,
+  "training_summary_tokens_p50_p90_p95": [
+    751.5,
+    1777.5,
+    2388.3
+  ],
+  "train_references_clipped": 3710,
+  "train_references_clipped_fraction": 0.6038,
+  "training_input_rows": 7030,
+  "training_usable_rows": 7028,
+  "training_rows_skipped": 2,
+  "train_test_overlap_removed": 0,
+  "training_source_pairs": 7028,
+  "median_document_words": 3129.0,
+  "median_reference_words": 638.0,
+  "median_document_to_reference_word_ratio": 4.604861141292538,
+  "reference_bigram_overlap_fraction": 0.7624748366395487,
+  "median_test_prediction_words": {
+    "06_decoder_student_kd": 346.5,
+    "04_hybrid_lora": 467.0,
+    "07_encoder_decoder_cross_attention": 530.0,
+    "05_decoder_prompt": 515.5
+  },
+  "definition": "Whitespace-delimited words, casefolded before corpus length and bigram counts. Overlap is the fraction of all reference bigram occurrences found in the corresponding source."
+}
