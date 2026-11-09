@@ -1,29 +1,23 @@
-# Report source and completion checklist
+# Report source
 
-`Report.tex` follows the CS781 report template's title block and eight numbered sections. Phase 7 is included because it is in the course brief. The main report has an eight-page limit, excluding references and the LLM declaration. The draft is a record of available evidence.
+[Report.tex](Report.tex) is the editable LaTeX source. Keep the evidence directory beside it because the two learning curves read their data from that directory. The title and numbered sections follow the course report template.
 
-Compile from this directory with TeX Live or MacTeX.
+Compile from the report directory with TeX Live or MacTeX.
 
-```sh
+~~~sh
 latexmk -pdf Report.tex
-```
+~~~
 
-From the repository root, use the archive builder after compiling.
+From the repository root, rebuild the current package with the report and seven phase directories.
 
-```sh
+~~~sh
 python3 build_submission.py report/Report.pdf --draft
-```
+~~~
 
-Omit `--draft` after completing the checklist to produce the exact Hello IITK archive and internal PDF filenames.
+## Before course submission
 
-## Complete before submitting
+- Verify the Codabench username, leaderboard ranks, distinct valid submission counts, and Phase 6 results. The 44 visible finished rows are a subtotal. The Phase 5 generic upload matches the extra notebook's aggregate prediction counts. A Codabench payload hash is unavailable.
+- Use the documented measurements to write the student-authored analysis and conclusions required by the course. Complete the personal contribution statement and verify the LLM usage declaration against actual use.
+- Recompile and omit the draft option when the report meets the course requirements. Check the compiled PDF and the archive before uploading.
 
-- Fill in the IITK email, Codabench username, leaderboard ranks, rank-freeze date and time zone, and official valid submission counts. The 44 visible finished rows are an evidence subtotal. The course brief calls for four distinct submissions in Phase 1 and six per phase in Phases 2–7.
-- Add Phase 6's actual run ID, measured metrics, candidate ZIPs, and official result. Record whether the candidates came from the repaired full suite or the fast notebook. The two variants use overlapping candidate IDs.
-- Confirm the checkpoint-to-upload mapping for the best Codabench rows. The local Phase 5 archive and the full-document notebook agree on both observed aggregate counts. A byte-for-byte match to Codabench needs a payload or reference hash from that upload.
-- Use `cs781-legal-intelligence` as the GitHub repository name and add its public URL after publishing the reviewed source and declaration. This repository is local.
-- Finish the abstract's findings, results interpretation, controlled-comparison discussion, error analysis, and conclusions in your own words. Add actual example IDs and counts where relevant and verify the bibliography against the sources you used.
-- Complete and sign off on the LLM usage declaration. It records visible assistance from the reference chat as a draft. Confirm its scope and list every tool and use, including any that fall outside the course's permitted categories.
-- Remove the draft notice and editing prompts, recompile, and check the page count and archive before uploading.
-
-See [the official CS781 LaTeX template](https://drive.google.com/file/d/1T9HVUeT2NerQTJD8A--tGgO-tDN1ww40/view) and [the evidence index](evidence/README.md).
+See the [evidence index](evidence/README.md) and [GitHub repository](https://github.com/hardik4tiwari/cs781-230437).

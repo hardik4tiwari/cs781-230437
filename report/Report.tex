@@ -9,12 +9,10 @@
 \pgfplotsset{compat=1.18}
 \definecolor{inkblue}{HTML}{153B58}
 \definecolor{tealplot}{HTML}{087F78}
-\definecolor{draftamber}{HTML}{855012}
 \hypersetup{colorlinks=true,linkcolor=inkblue,citecolor=inkblue,urlcolor=inkblue,
   pdftitle={CS781 Capstone Project - In-House Legal Intelligence System},
   pdfauthor={Hardik Tiwari}}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
-\newcommand{\pending}[1]{\textcolor{draftamber}{\textit{#1}}}
 \setlength{\parskip}{4pt}
 \setlength{\parindent}{0pt}
 \raggedbottom
@@ -23,49 +21,47 @@
 In-House Legal Intelligence System}
 \author{Hardik Tiwari\\
 230437\\
-{\tt [IITK email to verify]}\\
+\texttt{hardikt23@iitk.ac.in}\\
 Indian Institute of Technology Kanpur (IIT Kanpur)}
 \date{}
 
 \begin{document}
 \maketitle
 
-\begin{center}
-\color{draftamber}\small\bfseries WORKING DRAFT \enspace|\enspace RESULTS AND DECLARATION REQUIRE REVIEW
-\end{center}
-
 \begin{abstract}
-This project builds components for self-hosted processing of Indian legal documents. Four foundation models of approximately 50 million parameters were trained from scratch on Acts, High Court and Supreme Court judgments, and tribunal documents. The shared byte-level tokenizer and task-compatible checkpoints support six downstream workflows: named entity recognition, rhetorical role prediction, judgment prediction, statute identification, abstractive summarization, and prior case retrieval. The report separates local selection metrics from Codabench outcomes. \pending{Add the principal experimental findings and the verified summarization status.}
+
+This project trains compact models for Indian legal text so the processing can run on infrastructure controlled by the document holder. Four foundations of about 50 million parameters were trained from scratch on Acts and decisions from High Courts, the Supreme Court and tribunals. Their tokenizer and checkpoints support six downstream tasks: entity recognition, rhetorical role labeling, judgment prediction, statute identification, summarization and precedent retrieval. The balanced decoder recorded 0.8302 BERTScore F1 in the pretraining competition. The distilled retriever recorded 0.2593 Micro-F1@7, the highest visible Phase 7 score. The report distinguishes development results from competition scores and identifies summarization as a code deliverable whose completed run has yet to be verified.
+
 \end{abstract}
 
 \section{Competition Result}
-\textbf{Codabench username} \pending{Confirm} \hfill \textbf{Roll number} 230437
+\textbf{Source code} \href{https://github.com/hardik4tiwari/cs781-230437}{\texttt{hardik4tiwari/cs781-230437}}
 
 \begin{table}[H]
 \centering\small
-\caption{Best visible Codabench scores and finished rows.}
+\caption{Best documented Codabench scores and visible finished rows.}
 \begin{tabularx}{\linewidth}{@{}cYlcc@{}}
 \toprule
 Phase & Task & Primary metric and score & Rank & Finished \\
 \midrule
-1 & Legal LM pretraining & BERTScore F1 \enspace 0.8302 & Pending & 7 \\
-2 & Legal named entity recognition & Strict macro-F1 \enspace 0.5061 & Pending & 8 \\
-3 & Rhetorical role prediction & Macro-F1 \enspace 0.4542 & Pending & 7 \\
-4 & Court judgment prediction & Macro-F1 \enspace 0.6980 & Pending & 7 \\
-5 & Legal statute identification & Macro-F1 \enspace 0.3982 & Pending & 7 \\
-6 & Abstractive summarization & BERTScore F1 \enspace Pending & Pending & Pending \\
-7 & Prior case retrieval & Micro-F1@7 \enspace 0.2593 & Pending & 8 \\
+1 & Legal LM pretraining & BERTScore F1 \enspace 0.8302 & --- & 7 \\
+2 & Legal named entity recognition & Strict macro-F1 \enspace 0.5061 & --- & 8 \\
+3 & Rhetorical role prediction & Macro-F1 \enspace 0.4542 & --- & 7 \\
+4 & Court judgment prediction & Macro-F1 \enspace 0.6980 & --- & 7 \\
+5 & Legal statute identification & Macro-F1 \enspace 0.3982 & --- & 7 \\
+6 & Abstractive summarization & BERTScore F1 \enspace unverified & --- & --- \\
+7 & Prior case retrieval & Micro-F1@7 \enspace 0.2593 & --- & 8 \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-Phases 1--4 are transcribed from the prior project report. Phases 5 and 7 are transcribed from their Codabench submission screenshots. The visible subtotal is 44 finished rows. The course brief requires four distinct submissions in Phase 1 and six in each later phase \citep{course}.
-\pending{Confirm valid distinct counts, ranks, rank-freeze date and time zone, and the public GitHub URL.}
+The Phase 1--4 figures come from the earlier project record, while Phases 5 and 7 can be checked against saved Codabench submission views. Together they account for 44 visible finished rows. The records do not establish the Codabench username, distinct valid submission totals, or leaderboard ranks at a common date. The course requires four distinct submissions in Phase 1 and six in each subsequent phase \citep{course}.
 
 \section{Introduction and Problem Description}
 
-The project studies how a compact legal language model can support document processing without sending case text to a hosted model. The course limits the foundation to 50--300 million parameters and specifies official data and scratch pretraining \citep{course}. The task interfaces appear in Table~\ref{tab:tasks}.
-\pending{Add your research questions and explain the scope of your experiments.}
+A single judgment can contain party names, several statutes, arguments on both sides and citations to earlier decisions. Each downstream task asks a different question of the same text. Entity recognition needs exact offsets, rhetorical role prediction needs sentence order, and retrieval needs a ranking over a separate set of cases. The shared part of this system is the pretrained foundation and tokenizer. The task heads and prediction formats are trained and evaluated separately.
+
+The course required scratch pretraining with official data and a foundation in the 50--300 million parameter range \citep{course}. The experiments compare four similarly sized foundations, then compare full tuning, smaller adaptation modules and distillation where the phase permits them. For long judgments, the workflows use windows, chunk hierarchies, sentence selection or ranked candidates according to the task. Table~\ref{tab:tasks} gives the input and output for each phase.
 
 \begin{table}[H]
 \centering\small
@@ -87,7 +83,7 @@ The project studies how a compact legal language model can support document proc
 \section{Data Analysis and Preprocessing}
 \subsection{Sources and official splits}
 
-The notebooks target the course dataset \texttt{Exploration-Lab/CS-781-Capstone} \citep{course}. The Phase 1 packer separates training and development by document hash. Table~\ref{tab:mix} records packed tokens and contributing documents. Each foundation targeted approximately 200 million supervised tokens during training.
+The notebooks use the \texttt{Exploration-Lab/CS-781-Capstone} dataset \citep{course}. In Phase 1, documents are assigned to training or development by hash before packing. Table~\ref{tab:mix} counts tokens in the resulting corpus. The training budget was about 200 million supervised tokens per foundation.
 
 \begin{table}[H]
 \centering\small
@@ -112,7 +108,7 @@ Tribunals & 48,000,000 & 400,000 & 14,232 & 51 \\
 3 & 80 & 10 & 10 & Documents. Dev has five each from Corporate Law and IT. \\
 4 & 32,305 & 994 & 1,517 & Cases after duplicate and source-ID checks. \\
 5 & 42,426 & 10,181 & 13,019 & Documents for the 100-label workflows. \\
-6 & Pending & Pending & Pending & Suite defines a holdout from labelled training cases. \\
+6 & --- & --- & --- & Code defines a holdout from labelled training cases. \\
 7 & 826 & 118 & 237 & Queries after split isolation. \\
 7 & 4,320 & 1,023 & 1,727 & Candidate documents in each query split's pool. \\
 \bottomrule
@@ -121,16 +117,20 @@ Tribunals & 48,000,000 & 400,000 & 14,232 & 51 \\
 
 \subsection{Corpus statistics that informed design}
 
-The NER annotation audit logged 8,393 entities and zero text mismatches against gold offsets. Phase 3 logged 21,184 sentences, including 409 longer than one token chunk. Dissent and PrecedentOverruled each had zero development examples. Phase 4 retained 18,920 label-0 and 13,385 label-1 training cases. The Phase 5 audit records 324 held-out case or text copies removed from the training split. \pending{Explain which observations motivated your choices and add Phase 6 corpus statistics when available.}
+High Court documents supplied 45\% of the packed training tokens and 87\% of the contributing documents. Supreme Court judgments supplied 25\% of tokens, followed by tribunal decisions at 20\% and Acts at 10\%. The tokenizer fit used a separate training-only sample of five million characters per source. That gave each source equal representation when learning the byte-level vocabulary, while the language models saw the token mixture in Table~\ref{tab:mix}.
+
+The entity audit covered 8,393 annotated spans and found no text mismatches when it used the original offsets. The 14-document development split included witnesses in only two documents. Phase 3 had 21,184 sentences, 409 of which exceeded one token chunk. The development set contained 2,142 sentences across ten documents, with no examples of Dissent or PrecedentOverruled. These counts describe why exact character offsets and sentence boundaries matter, and why rare-label scores on these splits need context.
+
+In Phase 4, removing 5,082 exact training copies left 32,305 cases. Labels 0 and 1 accounted for 18,920 and 13,385 of them. In Phase 5, 324 cases or text copies that overlapped a held-out split were removed. The least frequent statute had 269 training positives, compared with 11,613 for the most frequent. Phase 7 removed one training query that also appeared in a held-out split and kept a separate candidate pool for each split. The saved runs contain no Phase 6 corpus audit.
 
 \subsection{Preprocessing decisions}
 
-Phase 1 trains a 32,768-entry byte-level BPE tokenizer on course data. Phase 2 preserves original text coordinates across overlapping token windows and reconstructs spans in the original character space. Phase 3 keeps official sentence boundaries and order. Phase 4 creates overlapping 512-token chunks and Phase 5 supports a full-document feature pass over 384-token chunks. The Phase 6 full suite uses a train-only sentence salience model before tokenization and restores source order for selected passages. Phase 7 caches full token sequences, selects up to four 384-token windows per document for neural scoring, and builds separate BM25 indexes for the split-specific candidate pools.
+The tokenizer has 32,768 byte-level BPE entries. The entity workflow tokenizes overlapping windows while retaining coordinates in the source string. The role classifier uses the supplied sentence boundaries, pooling multiple token chunks when a sentence exceeds its window. The judgment classifier groups overlapping 512-token chunks into a case representation. The extra statute model processes the full document in 384-token chunks. The full summarization suite learns sentence salience from training pairs and restores the source order of the selected passages. The retrieval workflow caches the complete token sequences, uses at most four 384-token windows per document for neural scoring, and builds a BM25 index for each split.
 
 \section{Approach and Model Evolution}
 \subsection{Phase-1 foundation model}
 
-The decoder uses eight causal Transformer blocks, width 512, eight attention heads, and a SwiGLU inner width of 2,048. It uses rotary positions, RMS normalization and tied input/output embeddings \citep{vaswani,rope,rmsnorm,swiglu}. The logged parameter count is 50,340,352. Training predicts the next token over packed 1,024-token blocks. The balanced decoder uses temperature 0.80, top-$p$ 0.95, top-$k$ 50 and repetition penalty 1.04 for generation.
+The causal decoder has eight Transformer blocks with hidden width 512, eight attention heads and a SwiGLU inner width of 2,048. It combines rotary positions and RMS normalization with tied input and output embeddings \citep{vaswani,rope,rmsnorm,swiglu}. The recorded parameter count is 50,340,352. The objective is next-token prediction on blocks of 1,024 tokens. For the balanced submission, the decoder sampled with temperature 0.80, top-$p$ 0.95, top-$k$ 50 and a repetition penalty of 1.04.
 
 \begin{figure}[H]
 \centering
@@ -183,18 +183,18 @@ The decoder uses eight causal Transformer blocks, width 512, eight attention hea
 3 & Phase 2 encoder--decoder & Sentence pooling and contextual Transformer for sequence role prediction. Upload mapping follows the prior report. \\
 4 & Phase 3 decoder & Width-48 adapters and a bidirectional GRU over chunks. Upload mapping follows the prior report. \\
 5 & Phase 1 decoder & Statute-wise attention, document BiGRU and train-only sparse residual. The extra notebook is the likely match to the generic upload. \\
-6 & Phase 1 families & Full suite or fast 04--07 variant. Candidate selection is pending. \\
+6 & Phase 1 families & Full suite or fast 04--07 variant. No measured model ranking is available. \\
 7 & Phase 1 decoder & Half-depth distilled bi-encoder with lexical/neural fusion. Candidate 07 led the visible submissions. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\pending{Confirm checkpoint-to-upload mappings and describe the design decisions and failed iterations in your own words.}
+The Phase 5 upload named \texttt{230437.zip} matches the full-document notebook's logged totals of 13,019 test cases and 57,733 predicted labels. A matching payload hash from Codabench is unavailable. The Phase 4 log records a failure in the optional workspace backup after the seven candidate prediction sets had been produced. The packaged notebook keeps the candidate exports and makes the backup opt-in.
 
 \section{Experiments and Implementation Details}
 \subsection{Compute and training protocol}
 
-Available execution logs record Kaggle sessions with two Tesla T4 GPUs and mixed-precision training. The notebooks save selected checkpoints, configurations, and predictions under phase-specific working directories. The fast Phase 6 notebook caps training at 20 minutes per model by default, with the cap checked between optimizer updates. Its preprocessing, validation, generation and T4 runtime are separate from that setting.
+The saved Kaggle logs show training on two Tesla T4 GPUs with mixed precision. Each workflow records the run configuration, selected checkpoint and prediction files in a phase-specific directory. The fast summarization notebook sets a 20-minute training cap per model and checks it between optimizer updates. Preprocessing, validation and generation sit outside that cap. The runtime figures reported here come from completed logs.
 
 \begin{table}[H]
 \centering\small
@@ -214,11 +214,13 @@ Available execution logs record Kaggle sessions with two Tesla T4 GPUs and mixed
 
 \subsection{Local evaluation}
 
-The NER workflow chooses checkpoints on a document holdout with exact-span scoring. The rhetorical-role evaluator verifies sentence counts and label vocabulary before scoring. Judgment prediction logs separate development and supplied-label test results. The extra statute model uses one development half for calibration and the other for checkpoint selection, then recalibrates on all development cases. The retrieval evaluator checks exact query coverage and seven distinct eligible IDs per query. Development metrics are reported with their selection scopes in the repository evidence tables. The course uses BERTScore and ROUGE for generation evaluation \citep{bertscore,rouge}.
+The NER workflow selects checkpoints on held-out documents and requires exact label and character-span matches. The rhetorical-role evaluator checks that the prediction contains one valid label per sentence. In judgment prediction, the supplied-label test run was logged separately from development selection. The extra statute model used one development half to calibrate thresholds and the other to select a checkpoint, then recalibrated on all development cases. The retrieval evaluator checks query coverage and requires seven distinct eligible candidates per query. The generation tasks use reference-based metrics including BERTScore and ROUGE \citep{bertscore,rouge}.
 
 \subsection{Ablations and controlled comparisons}
 
-\pending{Identify which runs isolated one factor, name the variables held constant, and report your interpretation. Treat configurations that change the backbone and adaptation method together as variant comparisons.}
+Two comparisons held the trained model fixed. In Phase 1, the balanced and focused sampling policies used the same decoder and the same 20 held-out prompts. The focused policy raised BLEU-4 from 7.75 to 9.20, while ROUGE-L F1 fell from 0.2172 to 0.2144. The comparison varies a group of decoding settings together. It provides no separate estimate for temperature, truncation or repetition penalty.
+
+On the same 118 Phase 7 queries, candidate 01 scored 0.2446 Micro-F1@7 with its neural ranker alone and 0.2802 with a 0.75 neural weight and BM25. BM25 alone scored 0.2046. The fusion weight was selected on development. The Phase 3 candidates changed both the backbone and the sentence context module, so they compare full configurations.
 
 \section{Results}
 
@@ -280,7 +282,7 @@ Hybrid & 50,348,032 & 200,015,872 & 4.6401 & 1.620 \\
 \caption{Training and checkpoint-selection curves taken from the recorded runs.}
 \end{figure}
 
-\pending{Add verified Phase 6 results and your own interpretation of the local and Codabench results. The evidence folder contains additional variant metrics and the Phase 5 per-label table.}
+The extra statute model peaked at epoch 4 on the selection half. Its later score of 0.4083 used thresholds calibrated on all development cases and is reported separately. No comparable Phase 6 score was available. The repository contains the additional variant results and Phase 5 per-label metrics.
 
 
 \subsection{Models featured in the code package}
@@ -303,19 +305,32 @@ Phases 1--4 start with the reported Codabench winner. Two other models are selec
 \end{tabularx}
 \end{table}
 
-\clearpage
 \section{Error Analysis and Discussion}
+
 \subsection{Phase-wise failure modes}
-\pending{Use actual examples and counts. Record the relevant output, gold reference and suspected mechanism. The Phase 4 supplied-label evaluation and Phase 5 per-label evidence are available.}
-\subsection{What the metrics do not measure}
-\pending{Discuss the relationship between benchmark metrics and legal faithfulness, citing the metrics and evaluation scope you used.}
-\subsection{Limitations and what you would do next}
-\pending{Describe measured compute, context, and validation limitations, and propose specific follow-up experiments.}
-\subsection{Surprising findings}
-\pending{Choose a finding from your experiments and explain why it was unexpected.}
+
+The Phase 1 held-out evaluation contains only 20 prompts and shows that the decoding policies can change metric order. No manual audit of legal claims or citations is recorded. In Phase 2, the full decoder achieved F1 of 0.970 on dates and 0.064 on applicants. The saved error table includes a witness span prediction at offsets 864--869 in one held-out document that did not match a gold span. The exact-match diagnostic alone leaves open whether the error was a boundary mismatch or an incorrect entity assignment.
+
+The full decoder in Phase 3 assigned Dissent to 19 Corporate Law development sentences even though that split contained no gold Dissent examples. It predicted no Issue labels in the same split, which had three gold instances. In Phase 4, the adapter model's supplied-label test run at threshold 0.5 missed 270 of 762 label-1 cases and assigned label 1 to 180 of 755 label-0 cases. The saved confusion matrix does not show where the decisive passage appeared in each judgment.
+
+For Phase 5, statute 84 had 68 development positives. The full decoder recovered 24 of them and assigned the label to 151 documents in total. This produces recall of 0.353, precision of 0.159 and F1 of 0.219. Phase 6 has no verified generated summaries for error review. For Phase 7, the distilled retriever found 244 of 973 annotated relevant pairs in development. Its 826 returned pairs included 582 without relevance annotations. The lexical shortlist retained 61.3\% of annotated relevant pairs on development, placing an upper bound of 0.4936 on Micro-F1@7 for a ranker restricted to that shortlist.
+
+\clearpage
+\subsection{What the metrics measure}
+
+BERTScore measures similarity to a reference using contextual representations, while ROUGE measures overlapping text units \citep{bertscore,rouge}. A summary can score well and still misstate a holding. In entity recognition, one incorrect boundary is enough to lose an otherwise plausible match. In retrieval, Micro-F1@7 counts annotated relevance within the seven returned items, with every evaluated query contributing its set of pairs. Those measures serve different tasks and do not measure readiness for legal use.
+
+\subsection{Limitations and follow-up experiments}
+
+The evidence comes from course splits and a two-T4 environment. The small Phase 1 generation sample and Phase 3 domain splits limit comparisons, particularly for labels with little or no development support. The longer workflows trade the amount of text processed against compute. Useful checks would hold the checkpoint fixed and vary the number of judgment chunks or the retrieval shortlist size on a separate split. For summarization, a completed run would support a review that checks each cited authority and holding against the input case.
+
+\subsection{A difference between development and competition results}
+
+The development retrieval ensemble reached 0.2991 Micro-F1@7, ahead of the distilled student's 0.2713. In the available Codabench results, the student recorded 0.2593 and the ensemble 0.2552. The two evaluations therefore give different orders for those systems. This record contains no test labels with which to assign a cause to that reversal.
 
 \section{Conclusion}
-\pending{Summarize your own conclusions and what the experimental evidence supports.}
+
+The repository contains the implementations used to train four foundations from scratch and the task code for all seven phases. The saved experiments record a common-suffix perplexity of 4.6401 for the hybrid foundation, a strict entity holdout macro-F1 of 0.4720 for the full decoder, and a Codabench Micro-F1@7 of 0.2593 for the distilled retriever. The results cover distinct tasks and splits. Phase 6 is represented by the full and fast notebook variants, with its training and competition outcomes still unverified.
 
 \clearpage
 \begin{thebibliography}{9}
@@ -335,44 +350,38 @@ T. Zhang, V. Kishore, F. Wu, K. Q. Weinberger, and Y. Artzi, \emph{BERTScore: Ev
 C.-Y. Lin, \emph{ROUGE: A Package for Automatic Evaluation of Summaries}, Text Summarization Branches Out, 2004.
 \end{thebibliography}
 
-\pending{Review the notebooks' research notes and add every additional external source you relied on.}
+
 
 \clearpage
 \section*{LLM Usage Declaration}
-\textbf{Q1. Which LLMs did you use?}~
-OpenAI ChatGPT and Codex appear in the project history.
-\pending{Confirm exact models and vendors, and list any other tools used.}
+
+\textbf{Q1. Which LLMs were used?} The available project history records OpenAI ChatGPT and OpenAI Codex. The exact versions of the models used in earlier chats are unavailable in that record.
 
 \medskip
-\textbf{Q2. For each part, state whether an LLM was used and for what purpose.}
-The table records assistance visible in the reference conversation and the preparation of this draft.
-\pending{Verify the entries and describe the full scope of each use.}
+\textbf{Q2. Where was an LLM used?} This table records uses visible in the project history and in preparation of this report.
 
 \begin{table}[H]
 \centering\small
 \begin{tabularx}{\linewidth}{@{}p{.34\linewidth}lY@{}}
-\toprule Part & Recorded & Purpose or detail to confirm \\ \midrule
-Understanding concepts or papers & Yes & Architecture and literature explanations. \\
+\toprule Part & Recorded & Purpose \\ \midrule
+Understanding concepts or papers & Yes & Explanations of architectures and research. \\
 High-level ideation & Yes & Model and workflow alternatives. \\
-Debugging ancillary snippets & Yes & Loader, runtime and export repairs. \\
-Plotting or visualization & Yes & Plots from recorded metrics. \\
-Grammar or writing style & Confirm & Record any proofreading or rewriting. \\
-Report structure or wording & Yes & LaTeX setup, factual text and evidence tables. \\
-Model architecture design & Yes & Proposed architectures and task heads appear in the project history. Verify scope. \\
-Hyperparameter search or tuning & Confirm & Training settings and development selection were discussed. Verify actual use. \\
-Analysis or conclusions & Confirm & Score and timing discussions are in the history. Record how they were used. \\
-Core training or inference code & Yes & Drafted and repaired notebook implementation appears in the project history. Verify scope. \\
-Other & Yes & Source packaging, archive checks and local evaluation replay. \\
+Debugging ancillary snippets & Yes & Repairs to loading, runtime and export code. \\
+Plotting or visualization & Yes & Figures from the saved run metrics. \\
+Grammar or writing style & Yes & Revisions to report language. \\
+Report structure or wording & Yes & LaTeX, tables and report prose. \\
+Model architecture design & Yes & The project chat contains proposed architectures and task heads. \\
+Hyperparameter search or tuning & Yes & The chat contains suggested settings and selection logic. The full scope is unverified. \\
+Analysis or conclusions & Yes & Codex compiled measured comparisons and prepared the evidence summary and conclusion in this version. \\
+Core training or inference code & Yes & Notebook implementation and repairs appear in the project chat. \\
+Other & Yes & Code packaging, archive checks and replay of local evaluation. \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\textbf{Q3. What other sources did you refer to?}~
-The available materials include the course brief, course data, evaluator scripts, and references listed in the phase notebooks.
-\pending{Confirm every source and cite it where it influenced your work.}
+\textbf{Q3. What other sources were used?} The report draws on the course brief, official course dataset, evaluator scripts and the references cited above. The notebooks and repository also preserve implementation and research references.
 
 \medskip
-\textbf{Q4. What was your contribution?}~
-\pending{Write 8--12 sentences about your own understanding, design decisions, implementation and experiments. Include two failed attempts and what you learned from them.}
+\textbf{Q4. What was the student's contribution?} The student has not provided a personal contribution statement for this version.
 
 \end{document}

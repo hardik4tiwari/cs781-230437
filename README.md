@@ -14,7 +14,7 @@ Code deliverables for Hardik Tiwari (230437), IIT Kanpur. Each phase directory c
 
 ## Featured models
 
-Use **`cs781-legal-intelligence`** as the GitHub repository name. The table points to the exact candidate IDs in each phase's runnable notebook. Phases 1–4 start with the reported competition winner and use local evaluation to select the two remaining models because full per-candidate Codabench scores were unavailable. Phases 5 and 7 use visible Codabench scores for individual models. The original suites also preserve the comparison runs and any teacher dependencies.
+The project repository is [hardik4tiwari/cs781-230437](https://github.com/hardik4tiwari/cs781-230437). The table points to the exact candidate IDs in each phase's runnable notebook. Phases 1–4 start with the reported competition winner and use local evaluation to select the two remaining models because full per-candidate Codabench scores were unavailable. Phases 5 and 7 use visible Codabench scores for individual models. The original suites also preserve the comparison runs and any teacher dependencies.
 
 | Phase | Models featured in the package |
 | --- | --- |
@@ -41,4 +41,4 @@ The repository contains source and small report evidence files. The datasets, to
 - [Local and Codabench evidence](report/evidence/README.md)
 - [Archive builder](build_submission.py)
 
-A report labeled **Draft** still needs the items in the checklist. Use the exact course filename after completing the report and confirming the results.
+The report source describes the verified results and records missing competition evidence. The completion checklist covers the remaining course submission requirements.

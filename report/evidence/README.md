@@ -11,4 +11,4 @@
 | `phase5_extra_curve.csv`, `phase5_extra_archive_match.json` | Extra-model notebook and local `230437.zip`. The archive has the logged 13,019 cases and 57,733 predicted labels, for the same mean of 4.434518780244258. |
 | `phase7_comparison.csv`, `phase7_ensemble_selection.json`, `phase7_evaluator_dev_score.json` | Executed Phase 7 development outputs and Codabench screenshot. The bundled evaluator was rerun on the saved development predictions of candidates 03 and 07. The file named `official_dev_score` in the original outputs is a local evaluator result. |
 
-The reference chat is [Provide Phase One Notebook](https://chatgpt.com/c/6ac3c22b-66f8-83e8-a21b-e6ba9f422c68). Original artifacts and notebook logs stay outside this repository.
+Additional report diagnostics come from the executed Phase 2 notebook's per-label table and error examples, the Phase 3 run's domain metrics, the Phase 4 supplied-label test confusion matrix, and the Phase 7 shortlist audit and recorded fusion sweep. The Phase 1 tokenizer sample sizes come from its tokenizer provenance record. Original case text, predictions, and run logs stay outside this repository.
